@@ -1,0 +1,195 @@
+#+TITLE: package-git.el - Git-based Package Management for ELPA
+#+AUTHOR: ELPA Git Manager
+#+DATE: 2025
+
+* Overview
+
+=package-git.el= provides automatic Git-based version control for your Emacs package directory (=package-user-dir=). It tracks all package installations, deletions, and upgrades by automatically committing changes to a Git repository, allowing you to easily rollback to previous package states.
+
+* Features
+
+- **Automatic Git Repository Management**: Automatically initializes a Git repository in your =package-user-dir= if one doesn't exist
+- **Automatic Commit Tracking**: Commits package changes automatically with descriptive messages
+- **Batch Operation Support**: Groups multiple operations (like =package-upgrade-all=) into single commits
+- **Manual Commit Support**: Allows manual commits with custom messages
+- **Non-intrusive**: Uses Emacs advice system to hook into existing package functions
+- **Easy Enable/Disable**: Simple commands to turn Git tracking on or off
+
+* Installation
+
+1. Place =package-git.el= in your Emacs load path
+2. Add to your configuration:
+
+#+BEGIN_SRC emacs-lisp
+(require 'package-git)
+(package-git-enable)
+#+END_SRC
+
+Or use =use-package=:
+
+#+BEGIN_SRC emacs-lisp
+(use-package package-git
+  :load-path "path/to/package-git"
+  :config
+  (package-git-enable))
+#+END_SRC
+
+* Configuration
+
+** Customization Options
+
+- =package-git-auto-commit= (default: =t=): Whether to automatically commit package changes
+
+#+BEGIN_SRC emacs-lisp
+(setq package-git-auto-commit t)  ; Enable auto-commit
+#+END_SRC
+
+* Usage
+
+** Basic Commands
+
+*** =package-git-enable=
+Enable Git management for ELPA packages. This will:
+- Check if Git is available on your system
+- Initialize a Git repository in =package-user-dir= if needed
+- Set up advice on package management functions
+- Create a =.gitignore= file with sensible defaults
+
+*** =package-git-disable=
+Disable Git management and remove all advice from package functions.
+
+*** =package-git-commit-now=
+Manually commit the current package state with a custom message.
+
+#+BEGIN_SRC emacs-lisp
+M-x package-git-commit-now RET "Manual backup before experiment" RET
+#+END_SRC
+
+** Automatic Tracking
+
+Once enabled, =package-git= automatically tracks:
+
+- **Package Installation**: =M-x package-install=, =M-x package-list-packages= → Install
+- **Package Deletion**: =M-x package-delete=, =M-x package-list-packages= → Delete  
+- **Package Upgrades**: =M-x package-upgrade-all=, individual package upgrades
+- **Batch Operations**: Package menu operations (=package-menu-execute=)
+
+** Commit Messages
+
+The package creates descriptive commit messages:
+
+- =Install: package-name=
+- =Delete: package-name=
+- =Package upgrade: package1, package2, package3=
+- =Package menu operations: multiple operations=
+
+** Git Repository Structure
+
+The Git repository is created in your =package-user-dir= (usually =~/.emacs.d/elpa/=) with:
+
+- **=.gitignore=**: Excludes =*.elc= files, temporary files, and package archives
+- **Initial commit**: If packages already exist, they're committed as "Initial commit: existing packages"
+- **User configuration**: Sets Git user as "ELPA Git Manager <elpa@localhost>"
+
+* Examples
+
+** Basic Workflow
+
+#+BEGIN_SRC emacs-lisp
+;; Enable Git tracking
+(package-git-enable)
+
+;; Install a package - automatically committed
+(package-install 'magit)
+;; Commit message: "Install: magit"
+
+;; Upgrade all packages - single batch commit
+(package-upgrade-all)
+;; Commit message: "Package upgrade: magit, company, helm"
+
+;; Manual commit
+(package-git-commit-now "Before trying experimental packages")
+#+END_SRC
+
+** Viewing History
+
+Since your packages are now in a Git repository, you can use standard Git commands:
+
+#+BEGIN_SRC shell
+cd ~/.emacs.d/elpa
+git log --oneline                    # View commit history
+git show HEAD                        # View latest changes
+git diff HEAD~1                      # Compare with previous state
+#+END_SRC
+
+** Rollback Example
+
+#+BEGIN_SRC shell
+cd ~/.emacs.d/elpa
+git log --oneline                    # Find the commit to rollback to
+git reset --hard <commit-hash>       # Rollback to specific state
+#+END_SRC
+
+* Requirements
+
+- **Emacs**: 24.4 or later
+- **Git**: Must be available in system PATH
+- **Packages**: Requires the built-in =package.el=
+
+* Troubleshooting
+
+** Git Not Available
+If you see "Git is not available on this system", ensure Git is installed and in your PATH.
+
+** Permission Issues
+Make sure Emacs has write permissions to your =package-user-dir=.
+
+** Large Repository Size
+The =.gitignore= excludes =*.elc= files by default. If your repository becomes large, you can manually clean up:
+
+#+BEGIN_SRC shell
+cd ~/.emacs.d/elpa
+git gc --aggressive --prune=now
+#+END_SRC
+
+* Advanced Usage
+
+** Customizing Git Configuration
+
+After enabling, you can customize the Git repository:
+
+#+BEGIN_SRC shell
+cd ~/.emacs.d/elpa
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+#+END_SRC
+
+** Integrating with Remote Repositories
+
+You can add a remote repository to backup your package state:
+
+#+BEGIN_SRC shell
+cd ~/.emacs.d/elpa
+git remote add origin https://github.com/yourusername/emacs-packages.git
+git push -u origin master
+#+END_SRC
+
+** Disabling Auto-commit for Specific Operations
+
+#+BEGIN_SRC emacs-lisp
+(let ((package-git-auto-commit nil))
+  (package-install 'some-package))  ; Won't auto-commit
+#+END_SRC
+
+* Contributing
+
+Contributions are welcome! Please ensure:
+- Code follows Emacs Lisp conventions
+- Functions are properly documented
+- Changes are tested with various package operations
+
+* See Also
+
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html][Emacs Package Management]]
+- [[https://git-scm.com/][Git Version Control]]
+- [[https://github.com/jwiegley/use-package][use-package]]
