@@ -23,17 +23,18 @@
 2. Add to your configuration:
 
 #+BEGIN_SRC emacs-lisp
-(require 'package-git)
-(package-git-enable)
+  (require 'package-git)
+  (package-git-enable)
 #+END_SRC
 
 Or use =use-package=:
 
 #+BEGIN_SRC emacs-lisp
-(use-package package-git
-  :load-path "path/to/package-git"
-  :config
-  (package-git-enable))
+  (use-package package-git
+    :vc ( :url "https://github.com/kn66/package-git.el"
+          :rev :newest)
+    :config
+    (package-git-enable))
 #+END_SRC
 
 * Configuration
@@ -43,7 +44,7 @@ Or use =use-package=:
 - =package-git-auto-commit= (default: =t=): Whether to automatically commit package changes
 
 #+BEGIN_SRC emacs-lisp
-(setq package-git-auto-commit t)  ; Enable auto-commit
+  (setq package-git-auto-commit t)  ; Enable auto-commit
 #+END_SRC
 
 * Usage
@@ -64,7 +65,7 @@ Disable Git management and remove all advice from package functions.
 Manually commit the current package state with a custom message.
 
 #+BEGIN_SRC emacs-lisp
-M-x package-git-commit-now RET "Manual backup before experiment" RET
+  M-x package-git-commit-now RET "Manual backup before experiment" RET
 #+END_SRC
 
 ** Automatic Tracking
@@ -98,19 +99,19 @@ The Git repository is created in your =package-user-dir= (usually =~/.emacs.d/el
 ** Basic Workflow
 
 #+BEGIN_SRC emacs-lisp
-;; Enable Git tracking
-(package-git-enable)
+  ;; Enable Git tracking
+  (package-git-enable)
 
-;; Install a package - automatically committed
-(package-install 'magit)
-;; Commit message: "Install: magit"
+  ;; Install a package - automatically committed
+  (package-install 'magit)
+  ;; Commit message: "Install: magit"
 
-;; Upgrade all packages - single batch commit
-(package-upgrade-all)
-;; Commit message: "Package upgrade: magit, company, helm"
+  ;; Upgrade all packages - single batch commit
+  (package-upgrade-all)
+  ;; Commit message: "Package upgrade: magit, company, helm"
 
-;; Manual commit
-(package-git-commit-now "Before trying experimental packages")
+  ;; Manual commit
+  (package-git-commit-now "Before trying experimental packages")
 #+END_SRC
 
 ** Viewing History
@@ -118,18 +119,18 @@ The Git repository is created in your =package-user-dir= (usually =~/.emacs.d/el
 Since your packages are now in a Git repository, you can use standard Git commands:
 
 #+BEGIN_SRC shell
-cd ~/.emacs.d/elpa
-git log --oneline                    # View commit history
-git show HEAD                        # View latest changes
-git diff HEAD~1                      # Compare with previous state
+  cd ~/.emacs.d/elpa
+  git log --oneline                    # View commit history
+  git show HEAD                        # View latest changes
+  git diff HEAD~1                      # Compare with previous state
 #+END_SRC
 
 ** Rollback Example
 
 #+BEGIN_SRC shell
-cd ~/.emacs.d/elpa
-git log --oneline                    # Find the commit to rollback to
-git reset --hard <commit-hash>       # Rollback to specific state
+  cd ~/.emacs.d/elpa
+  git log --oneline                    # Find the commit to rollback to
+  git reset --hard <commit-hash>       # Rollback to specific state
 #+END_SRC
 
 * Requirements
@@ -150,8 +151,8 @@ Make sure Emacs has write permissions to your =package-user-dir=.
 The =.gitignore= excludes =*.elc= files by default. If your repository becomes large, you can manually clean up:
 
 #+BEGIN_SRC shell
-cd ~/.emacs.d/elpa
-git gc --aggressive --prune=now
+  cd ~/.emacs.d/elpa
+  git gc --aggressive --prune=now
 #+END_SRC
 
 * Advanced Usage
@@ -161,9 +162,9 @@ git gc --aggressive --prune=now
 After enabling, you can customize the Git repository:
 
 #+BEGIN_SRC shell
-cd ~/.emacs.d/elpa
-git config user.name "Your Name"
-git config user.email "your.email@example.com"
+  cd ~/.emacs.d/elpa
+  git config user.name "Your Name"
+  git config user.email "your.email@example.com"
 #+END_SRC
 
 ** Integrating with Remote Repositories
@@ -171,16 +172,16 @@ git config user.email "your.email@example.com"
 You can add a remote repository to backup your package state:
 
 #+BEGIN_SRC shell
-cd ~/.emacs.d/elpa
-git remote add origin https://github.com/yourusername/emacs-packages.git
-git push -u origin master
+  cd ~/.emacs.d/elpa
+  git remote add origin https://github.com/yourusername/emacs-packages.git
+  git push -u origin master
 #+END_SRC
 
 ** Disabling Auto-commit for Specific Operations
 
 #+BEGIN_SRC emacs-lisp
-(let ((package-git-auto-commit nil))
-  (package-install 'some-package))  ; Won't auto-commit
+  (let ((package-git-auto-commit nil))
+    (package-install 'some-package))  ; Won't auto-commit
 #+END_SRC
 
 * Contributing
