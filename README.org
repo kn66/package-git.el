@@ -8,12 +8,12 @@
 
 * Features
 
-- ~Automatic Git Repository Management~: Automatically initializes a Git repository in your =package-user-dir= if one doesn't exist
-- ~Automatic Commit Tracking~: Commits package changes automatically with descriptive messages
-- ~Batch Operation Support~: Groups multiple operations (like =package-upgrade-all=) into single commits
-- ~Manual Commit Support~: Allows manual commits with custom messages
-- ~Non-intrusive~: Uses Emacs advice system to hook into existing package functions
-- ~Easy Enable/Disable~: Simple commands to turn Git tracking on or off
+- **Automatic Git Repository Management**: Automatically initializes a Git repository in your =package-user-dir= if one doesn't exist
+- **Automatic Commit Tracking**: Commits package changes automatically with descriptive messages
+- **Batch Operation Support**: Groups multiple operations (like =package-upgrade-all=) into single commits
+- **Manual Commit Support**: Allows manual commits with custom messages
+- **Non-intrusive**: Uses Emacs advice system to hook into existing package functions
+- **Easy Enable/Disable**: Simple commands to turn Git tracking on or off
 
 * Installation
 
@@ -69,10 +69,10 @@ M-x package-git-commit-now RET "Manual backup before experiment" RET
 
 Once enabled, =package-git= automatically tracks:
 
-- ~Package Installation~: =M-x package-install=, =M-x package-list-packages= → Install
-- ~Package Deletion~: =M-x package-delete=, =M-x package-list-packages= → Delete
-- ~Package Upgrades~: =M-x package-upgrade-all=, individual package upgrades
-- ~Batch Operations~: Package menu operations (=package-menu-execute=)
+- **Package Installation**: =M-x package-install=, =M-x package-list-packages= → Install
+- **Package Deletion**: =M-x package-delete=, =M-x package-list-packages= → Delete  
+- **Package Upgrades**: =M-x package-upgrade-all=, individual package upgrades
+- **Batch Operations**: Package menu operations (=package-menu-execute=)
 
 ** Commit Messages
 
@@ -87,9 +87,9 @@ The package creates descriptive commit messages:
 
 The Git repository is created in your =package-user-dir= (usually =~/.emacs.d/elpa/=) with:
 
-- ~=.gitignore=~: Excludes =*.elc= files, temporary files, and package archives
-- ~Initial commit~: If packages already exist, they're committed as "Initial commit: existing packages"
-- ~User configuration~: Sets Git user as "ELPA Git Manager <elpa@localhost>"
+- **=.gitignore=**: Excludes =*.elc= files, temporary files, and package archives
+- **Initial commit**: If packages already exist, they're committed as "Initial commit: existing packages"
+- **User configuration**: Sets Git user as "ELPA Git Manager <elpa@localhost>"
 
 * Examples
 
@@ -132,9 +132,9 @@ git reset --hard <commit-hash>       # Rollback to specific state
 
 * Requirements
 
-- ~Emacs~: 24.4 or later
-- ~Git~: Must be available in system PATH
-- ~Packages~: Requires the built-in =package.el=
+- **Emacs**: 24.4 or later
+- **Git**: Must be available in system PATH
+- **Packages**: Requires the built-in =package.el=
 
 * Troubleshooting
 
