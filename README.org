@@ -15,6 +15,8 @@
 - **Non-intrusive** : Uses Emacs advice system to hook into existing package functions
 - **Easy Enable/Disable** : Simple commands to turn Git tracking on or off
 
+[[./screenshots/magit-log.png]]
+
 * Installation
 
 1. Place =package-git.el= in your Emacs load path
